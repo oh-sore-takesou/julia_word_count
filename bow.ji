@@ -1,0 +1,55 @@
+# file -> words
+function readfile(filename::String)
+    docs = []
+    open(filename) do f
+        for doc in eachline(f)
+            push!(docs, split(doc))
+        end
+    end
+
+    return docs
+end
+
+function get_corpus(docs::Array)
+    corpus = Dict() # {id => word}
+    counts = Dict() # {id => count}
+    word2id = Dict() # {word => id}
+    for doc in docs
+        for word in doc
+            # exists
+            if get(word2id, word, 0) != 0
+                counts[word2id[word]] += 1
+            # new
+            else
+                corpus[length(corpus)] = word
+                word2id[word] = length(corpus)
+                counts[word2id[word]] = 1
+            end
+        end
+    end
+    
+    return corpus, word2id, counts
+end
+
+function get_vector(docs::Array, corpus, word2id, counts)
+    bow_corpuses = [] # {id => count}
+    for doc in docs
+        bow_corpus = Dict() # {id => count}
+        for word in doc
+            # exists
+            if get(bow_corpus, word2id[word], 0) != 0
+                bow_corpus[word2id[word]] += 1
+            # new
+            else
+                bow_corpus[word2id[word]] = 1
+            end
+        end
+        push!(bow_corpuses, bow_corpus)
+    end
+
+    return bow_corpuses
+end
+
+docs = readfile("./doc.txt")
+corpus, word2id, counts = get_corpus(docs)
+bow_corpuses = get_vector(docs, corpus, word2id, counts)

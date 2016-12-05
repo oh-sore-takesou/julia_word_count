@@ -1,0 +1,13 @@
+i = 0
+for n = 1:100
+    i += 1
+end
+println(i)
+
+type Person
+    name:: String
+    age:: Int
+end
+
+soutarou = Person("soutarou", 20)
+println(soutarou.name)
