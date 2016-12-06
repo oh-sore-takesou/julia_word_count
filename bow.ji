@@ -37,7 +37,8 @@ function get_vector(docs::Array, corpus, word2id, counts)
         bow_corpus = Dict() # {id => count}
         for word in doc
             # exists
-            if get(bow_corpus, word2id[word], 0) != 0
+            # if get(bow_corpus, word2id[word], 0) != 0
+            if haskey(bow_corpus, word2id[word])
                 bow_corpus[word2id[word]] += 1
             # new
             else
@@ -53,3 +54,6 @@ end
 docs = readfile("./doc.txt")
 corpus, word2id, counts = get_corpus(docs)
 bow_corpuses = get_vector(docs, corpus, word2id, counts)
+for bow_corpus in bow_corpuses
+    println(bow_corpus)
+end
